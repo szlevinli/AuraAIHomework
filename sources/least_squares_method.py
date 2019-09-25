@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib import pyplot as plt
 
 def least_squares_method(v_x, v_y):
     """最小二乘法
@@ -24,10 +25,19 @@ def least_squares_method(v_x, v_y):
     # return
     return slop, intercept
 
+def plot_show(x, y, slop, intercept):
+    x2 = np.linspace(x.min(), x.max(), 100)
+    y2 = x2 * slop + intercept
+    plt.plot(x, y, 'o')
+    plt.plot(x2, y2)
+    plt.show()
+
 if __name__ == "__main__":
     x = np.array([8, 2, 11, 6, 5, 4, 12, 9, 6, 1])
     y = np.array([3, 10, 3, 6, 8, 12, 1, 4, 9, 14])
 
     m, c = least_squares_method(x, y)
+
+    plot_show(x, y, m, c)
 
     print(f'slop is {m}, intercept is {c}')
