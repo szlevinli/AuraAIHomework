@@ -25,19 +25,31 @@ def least_squares_method(v_x, v_y):
     # return
     return slop, intercept
 
-def plot_show(x, y, slop, intercept):
+def plot_line(x, y, slop, intercept, **kwargs):
     x2 = np.linspace(x.min(), x.max(), 100)
     y2 = x2 * slop + intercept
-    plt.plot(x, y, 'o')
-    plt.plot(x2, y2)
-    plt.show()
+
+    plt.plot(x2, y2, **kwargs)   
+
+
+
 
 if __name__ == "__main__":
     x = np.array([8, 2, 11, 6, 5, 4, 12, 9, 6, 1])
     y = np.array([3, 10, 3, 6, 8, 12, 1, 4, 9, 14])
+    plt.plot(x, y, 'o')
 
+    # 原始数据
     m, c = least_squares_method(x, y)
+    plot_line(x, y, m, c, label='Origin')
+    # 增加平均分布的噪音
+    m, c = least_squares_method(x + np.random.rand(x.shape[0]), y)
+    plot_line(x, y, m, c, label='Uniform noise')
+    # 增加正态分布的噪音
+    m, c = least_squares_method(x + np.random.randn(x.shape[0]), y)
+    plot_line(x, y, m, c, label='Normal noise')
 
-    plot_show(x, y, m, c)
+    plt.legend()
+    plt.show()
 
     print(f'slop is {m}, intercept is {c}')
