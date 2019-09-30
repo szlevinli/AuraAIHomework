@@ -1,14 +1,15 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+
 def least_squares_method(v_x, v_y):
     """最小二乘法
     该方法仅支持二元一次方程 y = mx + c
-    
+
     Arguments:
         v_x {ndarray 1D} -- 样本数据中的特征值
         v_y {ndarray 1d} -- 样本数据中的真实值
-    
+
     Returns:
         float -- 斜率 m
         float -- 截距 c
@@ -25,13 +26,17 @@ def least_squares_method(v_x, v_y):
     # return
     return slop, intercept
 
+
+def least_squares_method_with_matrix(X, y):
+    X_ = np.concatenate((np.ones((X.shape[0], 1)), X), axis=1)
+    return np.linalg.inv((X_.T @ X_)) @ X_.T @ y
+
+
 def plot_line(x, y, slop, intercept, **kwargs):
     x2 = np.linspace(x.min(), x.max(), 100)
     y2 = x2 * slop + intercept
 
-    plt.plot(x2, y2, **kwargs)   
-
-
+    plt.plot(x2, y2, **kwargs)
 
 
 if __name__ == "__main__":
@@ -41,15 +46,18 @@ if __name__ == "__main__":
 
     # 原始数据
     m, c = least_squares_method(x, y)
-    plot_line(x, y, m, c, label='Origin')
-    # 增加平均分布的噪音
-    m, c = least_squares_method(x + np.random.rand(x.shape[0]), y)
-    plot_line(x, y, m, c, label='Uniform noise')
-    # 增加正态分布的噪音
-    m, c = least_squares_method(x + np.random.randn(x.shape[0]), y)
-    plot_line(x, y, m, c, label='Normal noise')
+    # plot_line(x, y, m, c, label='Origin')
+    # # 增加平均分布的噪音
+    # m, c = least_squares_method(x + np.random.rand(x.shape[0]), y)
+    # plot_line(x, y, m, c, label='Uniform noise')
+    # # 增加正态分布的噪音
+    # m, c = least_squares_method(x + np.random.randn(x.shape[0]), y)
+    # plot_line(x, y, m, c, label='Normal noise')
 
-    plt.legend()
-    plt.show()
+    # plt.legend()
+    # plt.show()
+
+    t = least_squares_method_with_matrix(x.reshape(x.shape[0], 1), y)
 
     print(f'slop is {m}, intercept is {c}')
+    print(f'slop is {t[1]}, intercept is {t[0]}')
